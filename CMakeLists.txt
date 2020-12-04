@@ -20,6 +20,7 @@ include_directories(include)
 include_directories(include/gzip)
 
 #SET(Torch_DIR /home/markus/libtorch/share/cmake/Torch)
+SET(Torch_DIR libtorch/share/cmake/Torch)
 
 find_package(Torch REQUIRED)
 
