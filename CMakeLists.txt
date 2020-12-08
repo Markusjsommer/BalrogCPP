@@ -19,9 +19,6 @@ file(GLOB globbed
 include_directories(include)
 include_directories(include/gzip)
 
-#SET(Torch_DIR /home/markus/libtorch/share/cmake/Torch)
-#SET(Torch_DIR libtorch/share/cmake/Torch)
-
 execute_process(
   COMMAND python -c "import torch; import os; print(os.path.dirname(torch.__file__), end='')"
   OUTPUT_VARIABLE TorchPath
@@ -36,9 +33,9 @@ target_link_libraries(Balrog ${TORCH_LIBRARIES})
 set_property(TARGET Balrog PROPERTY CXX_STANDARD 14)
 
 
-include(FindPkgConfig)
-find_package(zlib REQUIRED)
-include_directories(${ZLIB_INCLUDE_DIR})
+#include(FindPkgConfig)
+#find_package(zlib REQUIRED)
+#include_directories(${ZLIB_INCLUDE_DIR})
 
-target_link_libraries(${PROJECT_NAME} ${ZLIB_LIBRARY})
+#target_link_libraries(${PROJECT_NAME} ${ZLIB_LIBRARY})
 
