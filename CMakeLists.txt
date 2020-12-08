@@ -32,7 +32,16 @@ add_executable(Balrog main.cpp ${globbed} include/tqdm.h include/FastaReader.cpp
 target_link_libraries(Balrog ${TORCH_LIBRARIES})
 set_property(TARGET Balrog PROPERTY CXX_STANDARD 14)
 
-target_link_libraries(${PROJECT_NAME} -lz)
+
+
+find_package( ZLIB REQUIRED )
+if ( ZLIB_FOUND )
+    include_directories( ${ZLIB_INCLUDE_DIRS} )
+    target_link_libraries( Balrog ${ZLIB_LIBRARIES} )
+endif( ZLIB_FOUND )
+
+
+#target_link_libraries(${PROJECT_NAME} -lz)
 
 
 #include(FindPkgConfig)
