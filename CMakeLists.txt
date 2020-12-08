@@ -22,6 +22,12 @@ include_directories(include/gzip)
 #SET(Torch_DIR /home/markus/libtorch/share/cmake/Torch)
 #SET(Torch_DIR libtorch/share/cmake/Torch)
 
+execute_process(
+  COMMAND python -c "import torch; import os; print(os.path.dirname(torch.__file__), end='')"
+  OUTPUT_VARIABLE TorchPath
+)
+list(APPEND CMAKE_PREFIX_PATH ${TorchPath})
+
 find_package(Torch REQUIRED)
 
 add_executable(Balrog main.cpp ${globbed} include/tqdm.h include/FastaReader.cpp include/FastaReader.h include/GeneFinder.cpp include/GeneFinder.h)
