@@ -26,7 +26,7 @@ execute_process(
 list(APPEND CMAKE_PREFIX_PATH ${TorchPath})
 
 execute_process(
-  COMMAND python -c "import torch; import os; print(os.path.join(os.path.dirname(torch.__file__), lib), end='')"
+  COMMAND python -c "import torch; import os; print(os.path.join(os.path.dirname(torch.__file__), 'lib'), end='')"
   OUTPUT_VARIABLE LD_LIBRARY_PATH
 )
 
