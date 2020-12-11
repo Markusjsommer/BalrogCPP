@@ -25,6 +25,11 @@ execute_process(
 )
 list(APPEND CMAKE_PREFIX_PATH ${TorchPath})
 
+execute_process(
+  COMMAND python -c "import torch; import os; print(os.path.join(os.path.dirname(torch.__file__), lib), end='')"
+  OUTPUT_VARIABLE LD_LIBRARY_PATH
+)
+
 find_package(Torch REQUIRED)
 
 add_executable(balrog main.cpp ${globbed} include/tqdm.h include/FastaReader.cpp include/FastaReader.h include/GeneFinder.cpp include/GeneFinder.h)
