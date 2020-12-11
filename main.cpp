@@ -6,7 +6,7 @@
 
 int main(int argc, char* argv[]) {
     // parse command line options
-    cxxopts::Options options("Balrog", "Balrog is a prokaryotic gene finder based on a temporal convolutional network");
+    cxxopts::Options options("balrog", "balrog is a prokaryotic gene finder based on a temporal convolutional network");
     options.add_options()
             ("i, in", "Path to input fasta or gzipped fasta", cxxopts::value<std::string>())
             ("o, out", "Path to output annotation", cxxopts::value<std::string>())
@@ -23,7 +23,7 @@ int main(int argc, char* argv[]) {
             ("TIS-batch-size", "Batch size for the temporal convolutional network used to score TIS.",
                     cxxopts::value<int>()->default_value("5000"))
             ("verbose", "Verbose output", cxxopts::value<bool>()->default_value("true"))
-            ("h,help", "Print Balrog usage")
+            ("h,help", "Print balrog usage")
             ;
     auto result = options.parse(argc, argv);
 
@@ -155,13 +155,13 @@ int main(int argc, char* argv[]) {
                 coord0 = gene_coord_vec[j][k].second + 1;
                 coord1 = gene_coord_vec[j][k].first + 3;
             }
-            out << contigname << "\tBalrog\tCDS\t" << coord0 << "\t" << coord1 << "\t" << "." << "\t";
+            out << contigname << "\tbalrog\tCDS\t" << coord0 << "\t" << coord1 << "\t" << "." << "\t";
             if (gene_strand_vec[j][k]){
                 out << "+\t";
             } else{
                 out << "-\t";
             }
-            out << "0\tinference=ab initio prediction:Balrog;product=hypothetical protein" << std::endl;
+            out << "0\tinference=ab initio prediction:balrog;product=hypothetical protein" << std::endl;
         }
     }
     out.close();
