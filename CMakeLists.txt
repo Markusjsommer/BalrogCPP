@@ -50,3 +50,4 @@ endif( ZLIB_FOUND )
 
 #target_link_libraries(${PROJECT_NAME} ${ZLIB_LIBRARY})
 
+install(TARGETS Balrog DESTINATION bin)
