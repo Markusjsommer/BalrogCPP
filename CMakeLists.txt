@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(Balrog)
+project(balrog)
 
 set(CMAKE_CXX_STANDARD 14)
 
@@ -27,17 +27,17 @@ list(APPEND CMAKE_PREFIX_PATH ${TorchPath})
 
 find_package(Torch REQUIRED)
 
-add_executable(Balrog main.cpp ${globbed} include/tqdm.h include/FastaReader.cpp include/FastaReader.h include/GeneFinder.cpp include/GeneFinder.h)
+add_executable(balrog main.cpp ${globbed} include/tqdm.h include/FastaReader.cpp include/FastaReader.h include/GeneFinder.cpp include/GeneFinder.h)
 
-target_link_libraries(Balrog ${TORCH_LIBRARIES})
-set_property(TARGET Balrog PROPERTY CXX_STANDARD 14)
+target_link_libraries(balrog ${TORCH_LIBRARIES})
+set_property(TARGET balrog PROPERTY CXX_STANDARD 14)
 
 
 
 find_package( ZLIB REQUIRED )
 if ( ZLIB_FOUND )
     include_directories( ${ZLIB_INCLUDE_DIRS} )
-    target_link_libraries( Balrog ${ZLIB_LIBRARIES} )
+    target_link_libraries( balrog ${ZLIB_LIBRARIES} )
 endif( ZLIB_FOUND )
 
 
@@ -50,4 +50,4 @@ endif( ZLIB_FOUND )
 
 #target_link_libraries(${PROJECT_NAME} ${ZLIB_LIBRARY})
 
-install(TARGETS Balrog DESTINATION bin)
+install(TARGETS balrog DESTINATION bin)
