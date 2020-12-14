@@ -59,6 +59,4 @@ endif( ZLIB_FOUND )
 
 #target_link_libraries(${PROJECT_NAME} ${ZLIB_LIBRARY})
 
-set(CMAKE_INSTALL_RPATH $ORIGIN)
-
 install(TARGETS balrog DESTINATION bin)
