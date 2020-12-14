@@ -1,8 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 project(balrog)
 
-SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
-
 set(CMAKE_CXX_STANDARD 14)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fopenmp")
@@ -27,7 +25,8 @@ execute_process(
 )
 list(APPEND CMAKE_PREFIX_PATH ${TorchPath})
 
-set(CMAKE_INSTALL_RPATH "${TorchPath}/lib")
+set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+set(CMAKE_INSTALL_RPATH $ORIGIN)
 
 #execute_process(
 #  COMMAND python -c "import torch; import os; print(os.path.join(os.path.dirname(torch.__file__), 'lib'), end='')"
