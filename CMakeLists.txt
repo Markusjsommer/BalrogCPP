@@ -27,7 +27,7 @@ list(APPEND CMAKE_PREFIX_PATH ${TorchPath})
 
 if (NOT APPLE)
   set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
-  set(CMAKE_INSTALL_RPATH $ORIGIN)
+  set(CMAKE_INSTALL_RPATH "$ORIGIN/../lib")
 endif()
 
 #execute_process(
