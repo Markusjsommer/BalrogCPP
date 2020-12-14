@@ -25,8 +25,10 @@ execute_process(
 )
 list(APPEND CMAKE_PREFIX_PATH ${TorchPath})
 
-set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
-set(CMAKE_INSTALL_RPATH $ORIGIN)
+if (NOT APPLE)
+  set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+  set(CMAKE_INSTALL_RPATH $ORIGIN)
+endif()
 
 #execute_process(
 #  COMMAND python -c "import torch; import os; print(os.path.join(os.path.dirname(torch.__file__), 'lib'), end='')"
