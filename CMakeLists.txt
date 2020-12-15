@@ -30,7 +30,9 @@ set(CMAKE_VERBOSE_MAKEFILE ON)
 #set(CMAKE_INSTALL_RPATH "$ORIGIN/../lib")
 #set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
-set(CMAKE_INSTALL_RPATH "$ORIGIN/../torch/lib")
+#set(CMAKE_INSTALL_RPATH "$ORIGIN/../torch/lib")
+
+set(CMAKE_INSTALL_RPATH "$PREFIX/lib/python3.7/site-packages/torch/lib")
 
 #execute_process(
 #  COMMAND python -c "import torch; import os; print(os.path.join(os.path.dirname(torch.__file__), 'lib'), end='')"
