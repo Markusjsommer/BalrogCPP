@@ -37,7 +37,7 @@ set(CMAKE_INSTALL_RPATH "$ORIGIN/../torch/lib")
 #  OUTPUT_VARIABLE LD_LIBRARY_PATH
 #)
 
-find_package(torch REQUIRED)
+find_package(Torch REQUIRED)
 
 add_executable(balrog main.cpp ${globbed} include/tqdm.h include/FastaReader.cpp include/FastaReader.h include/GeneFinder.cpp include/GeneFinder.h)
 
