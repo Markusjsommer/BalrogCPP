@@ -27,17 +27,17 @@ list(APPEND CMAKE_PREFIX_PATH ${TorchPath})
 
 set(CMAKE_VERBOSE_MAKEFILE ON)
 #set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
-set(CMAKE_INSTALL_RPATH "$ORIGIN/../lib")
-set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+#set(CMAKE_INSTALL_RPATH "$ORIGIN/../lib")
+#set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
-
+set(CMAKE_INSTALL_RPATH "$ORIGIN/../torch/lib")
 
 #execute_process(
 #  COMMAND python -c "import torch; import os; print(os.path.join(os.path.dirname(torch.__file__), 'lib'), end='')"
 #  OUTPUT_VARIABLE LD_LIBRARY_PATH
 #)
 
-find_package(Torch REQUIRED)
+find_package(torch REQUIRED)
 
 add_executable(balrog main.cpp ${globbed} include/tqdm.h include/FastaReader.cpp include/FastaReader.h include/GeneFinder.cpp include/GeneFinder.h)
 
