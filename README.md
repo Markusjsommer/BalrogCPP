@@ -5,8 +5,6 @@ Balrog is a prokaryotic gene finder based on a Temporal Convolutional Network. W
 
 Preprint available on bioRxiv [here](https://www.biorxiv.org/content/10.1101/2020.09.06.285304v1).
 
-![Balrog](images/balrog.jpg)
-
 ## Getting started
 conda install balrog -c bioconda
 balrog --help
