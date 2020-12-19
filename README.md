@@ -1,5 +1,5 @@
 # Bacterial Annotation by Learned Representation Of Genes (C++ version)
-[![BioConda Install](https://anaconda.org/bioconda/balrog/badges/downloads.svgl)](https://anaconda.org/bioconda/balrog)
+[![BioConda Install](https://anaconda.org/bioconda/balrog/badges/downloads.svg)](https://anaconda.org/bioconda/balrog)
 
 ## Overview
 This repo is a work in progress...
