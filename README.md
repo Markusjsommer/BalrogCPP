@@ -1,7 +1,6 @@
 # Bacterial Annotation by Learned Representation Of Genes (C++ version)
-[![BioConda Install](https://img.shields.io/conda/dn/bioconda/balrog.svg?style=flag&label=BioConda%20install)](https://anaconda.org/bioconda/balrog)
 [![BioConda Install](https://anaconda.org/bioconda/balrog/badges/installer/conda.svg)](https://anaconda.org/bioconda/balrog)
-[![BioConda Install](https://anaconda.org/bioconda/balrog/badges/downloads.svg)](https://anaconda.org/bioconda/balrog)
+[![BioConda Install](https://img.shields.io/conda/dn/bioconda/balrog.svg?style=flag&label=BioConda%20install)](https://anaconda.org/bioconda/balrog)
 [![BioConda Install](https://anaconda.org/bioconda/balrog/badges/platforms.svg)](https://anaconda.org/bioconda/balrog)
 [![BioConda Install](https://anaconda.org/bioconda/balrog/badges/license.svg)](https://anaconda.org/bioconda/balrog)
 
