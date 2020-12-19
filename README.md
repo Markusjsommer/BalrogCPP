@@ -10,7 +10,8 @@ Preprint available on bioRxiv [here](https://www.biorxiv.org/content/10.1101/202
 ## Getting started
 NOTE: the pretrained gene and TIS models can be found in the models directory in this repository (we will add these paths by default in the next release)
 
-conda install balrog --channel bioconda
+    # install via conda
+    conda install balrog --channel bioconda
 
 Conda can be very slow and are working on providing precompiled binaries for unix systems in the near future
 
