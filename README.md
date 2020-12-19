@@ -11,3 +11,5 @@ NOTE: the pretrained gene and TIS models can be found in the models directory in
 conda install balrog --channel bioconda
 
 Conda can be very slow and are working on providing precompiled binaries for unix systems in the near future
+
+We are also working on integrating MMseqs2 as described in the preprint to reduce false positive predictions
