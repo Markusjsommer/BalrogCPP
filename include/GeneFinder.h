@@ -201,18 +201,21 @@ public:
             std::vector<bool> &gene_strand,
             std::vector<std::string> &gene_nucseq,
             std::vector<std::string> &gene_protseq,
+            std::vector<double> &gene_score,
             int table,
             int min_ORF_length,
             int max_ORF_overlap,
             bool verbose,
             int gene_batch_size,
-            int TIS_batch_size);
+            int TIS_batch_size,
+            bool mmseqs);
 private:
     // general parameters
     bool verbosity;
     const int k_seengene = 10;
     const int multimer_threshold = 2;
     const int max_forward_connections = 1000;
+    const int cutoff = 100;
 
     // previously optimized parameters
     const float weight_gene_prob = 0.9746869839852076;
@@ -253,13 +256,14 @@ private:
     void maximize_coherent_score();
 
     void get_kmer_filter_scores();
-    void get_MMSeqs2_scores();
+    void run_mmseqs();
 
     // gene info
     std::vector<std::pair<int, int>> *_gene_coord;
     std::vector<bool> *_gene_strand;
     std::vector<std::string> *_gene_nucseq;
     std::vector<std::string> *_gene_protseq;
+    std::vector<double> *_gene_score;
 
     // seq information
     std::string seq_translated_f0;

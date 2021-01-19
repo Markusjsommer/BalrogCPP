@@ -14,17 +14,20 @@ void GeneFinder::find_genes(std::string &contig_seq,
         std::vector<bool> &gene_strand,
         std::vector<std::string> &gene_nucseq,
         std::vector<std::string> &gene_protseq,
+        std::vector<double> &gene_score,
         int table,
         int min_ORF_length,
         int max_ORF_overlap,
         bool verbose,
         int gene_batch_size,
-        int TIS_batch_size) {
+        int TIS_batch_size,
+        bool mmseqs) {
 
     _gene_coord = &gene_coord;
     _gene_strand = &gene_strand;
     _gene_nucseq = &gene_nucseq;
     _gene_protseq = &gene_protseq;
+    _gene_score = &gene_score;
 
 
     verbosity = verbose;
@@ -48,6 +51,107 @@ void GeneFinder::find_genes(std::string &contig_seq,
         std::cout << "Solving for geneiest path through contig..." << std::endl;
     }
     maximize_coherent_score();
+
+    if (mmseqs){
+        if (verbosity) {
+            std::cout << "Checking low-scoring ORFs against reference genes with MMseqs2..." << std::endl;
+        }
+        run_mmseqs();
+    }
+}
+
+void GeneFinder::run_mmseqs(){
+    // locate tmp dir
+    std::string tmp_dir;
+    char* tmp = std::tmpnam(nullptr);
+    int lastslash = ((std::string) tmp).rfind('/');
+    tmp_dir = ((std::string) tmp).substr(0, lastslash);
+
+    // find low-scoring ORFs
+    std::vector<int> low_score_idx;
+    for (int i=0; i < (*_gene_score).size(); ++i){
+        if ((*_gene_score)[i] < cutoff){
+            low_score_idx.emplace_back(i);
+        }
+    }
+
+    // stop if no low-scorers
+    if (low_score_idx.empty()){
+        return;
+    }
+
+    // write low-scoring ORFs to temp file
+    std::ofstream stream;
+    char* tmp_lowscore_path = std::tmpnam(nullptr);
+    stream.open(tmp_lowscore_path);
+    for (int i=0; i < low_score_idx.size(); ++i){
+        stream << ">" << i << "\n";
+        stream << (*_gene_protseq)[low_score_idx[i]] << "\n";
+    }
+    stream.close();
+
+
+    // run mmseqs
+    char tmp_alignment_path[L_tmpnam];
+    std::tmpnam(tmp_alignment_path);
+
+    std::string ref_db_path = tmp_dir + "/reference_genes.db"; // TODO link these to main definition
+    std::string ref_index_path = tmp_dir + "/balrog_mmseqs_index";
+
+    std::string mmseqs_sensitivity = "7.0";
+    std::string command = "mmseqs easy-search -s " + mmseqs_sensitivity + " " \
+    + (std::string) tmp_lowscore_path + " " \
+    + (std::string) ref_db_path + " " \
+    + (std::string) tmp_alignment_path + " " \
+    + (std::string) ref_index_path;
+
+    if (verbosity){
+        command += " -v 1";
+    }
+    else {
+        command += " -v 0";
+    }
+
+    int status = std::system(command.c_str());
+    if (status != 0) {
+        std::cerr << "error running mmseqs, try --clear-cache\n";
+        exit(status);
+    }
+
+    // read mmseqs output
+    std::ifstream instream;
+    instream.open(tmp_alignment_path);
+    std::set<int> hitset;
+    for(std::string line; getline(instream, line);){
+        int tab = ((std::string) line).find('\t');
+        int hitidx = stoi(((std::string) line).substr(0, tab));
+        hitset.insert(hitidx);
+    }
+    instream.close();
+
+    // remove all low-scoring ORFs without mmseqs hits
+    // remove hits backward from highest idx
+    std::vector<int> hitvec;
+    hitvec.reserve(hitset.size());
+    for (int h : hitset){
+        hitvec.push_back(h);
+    }
+    std::reverse(hitvec.begin(), hitvec.end()); // TODO this can be replaced by reverse iterating over the sorted set
+
+    for (int idx : hitvec){
+        low_score_idx.erase(low_score_idx.begin() + idx);
+    }
+
+    // remove non-hit low-scores backward from highest idx
+    std::reverse(low_score_idx.begin(), low_score_idx.end());
+    for (int idx : low_score_idx){
+        _gene_coord->erase(_gene_coord->begin() + idx);
+        _gene_strand->erase(_gene_strand->begin() + idx);
+        _gene_nucseq->erase(_gene_nucseq->begin() + idx);
+        _gene_protseq->erase(_gene_protseq->begin() + idx);
+        _gene_score->erase(_gene_score->begin() + idx);
+    }
+
 }
 
 void GeneFinder::score_ORFs() {
@@ -986,6 +1090,7 @@ void GeneFinder::maximize_coherent_score() {
     gene_ORF_idx_topsort.emplace_back(graph_idx);
     double s = max_path_score[graph_idx];
     while (s != 0){
+//    while (s > 0){
         graph_idx = max_path_parent[graph_idx];
         gene_ORF_idx_topsort.emplace_back(graph_idx);
         s = max_path_score[graph_idx];
@@ -996,6 +1101,8 @@ void GeneFinder::maximize_coherent_score() {
     (*_gene_strand).reserve(gene_ORF_idx_topsort.size());
     (*_gene_nucseq).reserve(gene_ORF_idx_topsort.size());
     (*_gene_protseq).reserve(gene_ORF_idx_topsort.size());
+    (*_gene_score).reserve(gene_ORF_idx_topsort.size());
+
     for (int i = (int)gene_ORF_idx_topsort.size()-1; i >= 0; --i){ // flip order of backtracked graph
         // coords
 //        std::pair<int, int> coords = ORF_coords_topsort[gene_ORF_idx_topsort[i]].first;
@@ -1009,18 +1116,28 @@ void GeneFinder::maximize_coherent_score() {
         std::string nucseq;
         if ((*_gene_strand).back()){
             nucseq = seq.substr(coords.first,coords.second - coords.first);
+            (*_gene_nucseq).emplace_back(nucseq);
         } else{
-            nucseq = seq.substr(coords.second,coords.first - coords.second);
+            int stopcoord = coords.second + 3;
+            nucseq = seq.substr(stopcoord,coords.first - coords.second);
+
             std::reverse(nucseq.begin(), nucseq.end());
+            std::string nucseq_rt;
+            complement(nucseq, nucseq_rt);
+            nucseq = nucseq_rt;
         }
         (*_gene_nucseq).emplace_back(nucseq);
 
+
         // protein sequence 5' to 3'
-        // TODO probably faster just to index into pretranslated frames
         std::string protseq;
         for (int j=0; j < nucseq.size(); j +=3){
             protseq += trantab_standard[nucseq.substr(j, 3)].first;
         }
         (*_gene_protseq).emplace_back(protseq);
+
+        // get scores
+        double score = ORF_scores[ORF_coords_topsort[gene_ORF_idx_topsort[i]].second];
+        (*_gene_score).emplace_back(score);
     }
 }
