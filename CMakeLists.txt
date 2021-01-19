@@ -24,10 +24,18 @@ list(APPEND CMAKE_PREFIX_PATH ${TorchPath})
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
 if (APPLE)
-  set(CMAKE_INSTALL_RPATH "@executable_path/../lib/python3.7/site-packages/torch/lib")
+  execute_process(
+    COMMAND python -c "import torch; import os; print('@executable_path/../' + '/'.join((os.path.dirname(torch.__file__)).split('/')[-4:]) + '/lib', end='')"
+    OUTPUT_VARIABLE TorchPathR
+  )
 else()
-  set(CMAKE_INSTALL_RPATH "$ORIGIN/../lib/python3.7/site-packages/torch/lib")
+  execute_process(
+    COMMAND python -c "import torch; import os; print('$ORIGIN/../' + '/'.join((os.path.dirname(torch.__file__)).split('/')[-4:]) + '/lib', end='')"
+    OUTPUT_VARIABLE TorchPathR
+  )
 endif()
+set(CMAKE_INSTALL_RPATH TorchPathR)
+
 
 find_package(Torch REQUIRED)
 
