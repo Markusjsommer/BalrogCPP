@@ -11,6 +11,9 @@ Preprint available on bioRxiv [here](https://www.biorxiv.org/content/10.1101/202
 
 ## Getting started
     # install via conda
+    conda create -n balrog_env python=3.7
+    conda activate balrog_env
+    
     conda install pytorch=1.7.1 -c conda-forge
     conda install balrog -c conda-forge -c bioconda
 
