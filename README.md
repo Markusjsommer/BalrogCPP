@@ -16,6 +16,8 @@ Preprint available on bioRxiv [here](https://www.biorxiv.org/content/10.1101/202
     
     conda install pytorch=1.7.1 -c conda-forge
     conda install balrog -c conda-forge -c bioconda
+    
+    balrog --help
 
 Conda can be very slow and are working on providing precompiled binaries for unix systems in the near future
 
